@@ -22,3 +22,44 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 replay_pid*
+
+# Maven target directory
+/postgres-datalayer/target/
+
+# IntelliJ IDEA project files
+/.idea/
+/*.iml
+*.iws
+/out/
+
+# Mac OS system files
+.DS_Store
+
+# Windows system files
+Thumbs.db
+ehthumbs.db
+desktop.ini
+
+# Temporary files
+*.tmp
+*.swp
+*.bak
+
+# IDE-specific working directories
+/.vscode/
+
+# Optional: ignore local environment settings
+.env
+*.local
+
+# IntelliJ run/debug config (optional)
+/.idea/runConfigurations/
+
+# Maven wrapper (optional)
+/.mvn/wrapper/maven-wrapper.jar
+
+# IntelliJ
+.idea/
+*.iml
+*.iws
+out/
