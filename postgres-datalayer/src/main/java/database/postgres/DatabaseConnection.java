@@ -2,9 +2,10 @@ package database.postgres;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 
 
-public class DatabaseConnection implements DatabaseConnectionInterface {
+public class DatabaseConnection implements IDatabaseConnection {
 
     public Connection getConnection() {
         Connection connection = null;
@@ -16,7 +17,7 @@ public class DatabaseConnection implements DatabaseConnectionInterface {
                     "admin",
                     "admin");
 
-        } catch (Exception e) {
+        } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }
 
