@@ -1,6 +1,7 @@
 package database.postgres.Tests;
 
 import database.postgres.DAOs.RoleDAO;
+import database.postgres.DatabaseConnection;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.*;
@@ -17,11 +18,7 @@ public class RoleDAOTest {
 
     @BeforeAll
     static void initDatabase() throws SQLException {
-        connection = DriverManager.getConnection(
-                "jdbc:postgresql://localhost:5432/threetier_db",
-                "admin",
-                "admin"
-        );
+        connection = new DatabaseConnection().getConnection();
         connection.setAutoCommit(false); // Roll back after each test
     }
 
