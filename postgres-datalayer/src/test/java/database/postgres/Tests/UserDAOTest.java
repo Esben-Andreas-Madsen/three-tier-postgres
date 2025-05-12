@@ -19,7 +19,6 @@ public class UserDAOTest {
 
     private static Connection connection;
     private static UserDAO userDAO;
-    private static Role testRole;
     private static User user;
     private static final Logger logger = LogManager.getLogger(UserDAO.class);
 
@@ -36,16 +35,10 @@ public class UserDAOTest {
         RoleDAO roleDAO = new RoleDAO();
         userDAO = new UserDAO();
 
-        // Create a test role before each test
-        testRole = new Role();
-        testRole.setName("TEST_ROLE");
-        roleDAO.createRole(connection, testRole);
-
         user = new User();
         user.setUsername("testuser");
         user.setEmail("test@example.com");
         user.setPasswordHash("hashed_pw");
-        user.setRole(testRole);
     }
 
     @AfterEach
@@ -66,7 +59,6 @@ public class UserDAOTest {
         user.setUsername("TEST_USER");
         user.setEmail("TEST@EXAMPLE.COM");
         user.setPasswordHash("HASHED_PW");
-        user.setRole(testRole);
 
         User shouldNotExist = userDAO.getUserByUsername(connection, "TEST_USER");
         logger.info("tried to fetch user and got: " + shouldNotExist);
@@ -92,7 +84,6 @@ public class UserDAOTest {
         user.setUsername("testuser");
         user.setEmail("test@example.com");
         user.setPasswordHash("hashed_pw");
-        user.setRole(testRole);
 
         userDAO.createUser(connection, user);
         logger.info("created user: " + user);
@@ -112,7 +103,6 @@ public class UserDAOTest {
         user.setUsername("TEST_USER");
         user.setEmail("TEST@EXAMPLE.COM");
         user.setPasswordHash("HASHED_PW");
-        user.setRole(testRole);
 
         userDAO.createUser(connection, user);
         logger.info("created user: " + user);
@@ -133,7 +123,6 @@ public class UserDAOTest {
         user.setUsername("TEST_USER");
         user.setEmail("TEST@EXAMPLE.COM");
         user.setPasswordHash("HASHED_PW");
-        user.setRole(testRole);
 
         userDAO.createUser(connection, user);
         logger.info("created user: " + user);
