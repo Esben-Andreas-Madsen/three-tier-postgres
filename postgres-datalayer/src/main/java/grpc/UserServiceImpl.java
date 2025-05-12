@@ -1,8 +1,7 @@
 package grpc;
 
-import database.postgres.DAOs.IRoleDAO;
+import com.google.protobuf.StringValue;
 import database.postgres.DAOs.IUserDAO;
-import database.postgres.DAOs.RoleDAO;
 import database.postgres.DAOs.UserDAO;
 import database.postgres.DatabaseConnection;
 import database.postgres.IDatabaseConnection;
@@ -27,8 +26,7 @@ public class UserServiceImpl extends UserServiceGrpc.UserServiceImplBase {
         UserDTO newUser = UserDTO.newBuilder()
                 .setUsername(request.getUsername())
                 .setEmail(request.getEmail())
-                .setPasswordHash(request.getPasswordHash())
-                .setRole(RoleDTO.newBuilder().setId(request.getRoleId()))
+                .setPasswordHash(StringValue.of(request.getPasswordHash()))
                 .build();
 
         userDAO.createUser(connection.getConnection(), formatter.requestToUser(request));
