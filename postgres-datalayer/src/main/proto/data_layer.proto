@@ -3,19 +3,14 @@ option java_multiple_files = true;
 package grpc;
 
 import "google/protobuf/timestamp.proto";
-
-message RoleDTO {
-    int32 id = 1;
-    string name = 2;
-}
+import "google/protobuf/wrappers.proto";
 
 message UserDTO {
     int32 id = 1;
     string username = 2;
     string email = 3;
-    string password_hash = 4;
-    RoleDTO role = 5;
-    google.protobuf.Timestamp created_at = 6;
+    google.protobuf.StringValue password_hash = 4;
+    google.protobuf.Timestamp created_at = 5;
 }
 
 // Request messages
@@ -23,7 +18,6 @@ message CreateUserRequest {
     string username = 1;
     string email = 2;
     string password_hash = 3;
-    int32 role_id = 4;
 }
 
 message GetUserByIdRequest {
@@ -37,10 +31,6 @@ message GetUserByUsernameRequest {
 // Response messages
 message UserResponse {
     UserDTO user = 1;
-}
-
-message RoleResponse {
-    RoleDTO role = 1;
 }
 
 // User service
