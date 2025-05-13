@@ -5,17 +5,17 @@ services:
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
-      POSTGRES_DB: threetier_db
+      POSTGRES_DB: artifact_auction_db
     ports:
       - "5432:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
-      - ./postgres-datalayer/src/main/resources/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - ./db:/docker-entrypoint-initdb.d
     networks:
       - backend
 
       # command to login through docker desktop to execute sql:
-      # psql -U admin -h localhost -d threetier_db -W
+      # psql -U admin -h localhost -d artifact_auction_db -W
 
 volumes:
   postgres-data:
