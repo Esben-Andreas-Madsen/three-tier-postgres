@@ -64,7 +64,7 @@ CREATE TABLE ArtifactHistory (
     id SERIAL PRIMARY KEY,
     artifact_id INTEGER REFERENCES Artifacts(id) ON DELETE CASCADE,
     event_date TIMESTAMP,
-    event_description TEXT CHECK (LENGTH(origin_story) <= 2000),
+    event_description TEXT CHECK (LENGTH(event_description) <= 2000),
     involved_parties VARCHAR(200)
 );
 
@@ -74,7 +74,7 @@ CREATE TABLE Events (
     name VARCHAR(100) NOT NULL,
     date TIMESTAMP NOT NULL,
     location VARCHAR(100),
-    description TEXT CHECK (LENGTH(origin_story) <= 2000)
+    description TEXT CHECK (LENGTH(description) <= 2000)
 );
 
 -- Event-Artifact Relationship (many-to-many)
