@@ -2,23 +2,21 @@ package database.postgres.DAOs;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import shared.Role;
 import shared.User;
 
 import java.sql.*;
 
 public class UserDAO implements IUserDAO {
-    private static final Logger logger = LogManager.getLogger(RoleDAO.class);
+    private static final Logger logger = LogManager.getLogger(UserDAO.class);
 
 
     public void createUser(Connection connection, User user) {
-        String sql = "INSERT INTO users (username, email, password_hash, role_id) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO users (username, email, password_hash) VALUES (?, ?, ?)";
 
         try (PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, user.getUsername());
             stmt.setString(2, user.getEmail());
             stmt.setString(3, user.getPasswordHash());
-            stmt.setInt(4, user.getRole().getId());
 
             stmt.executeUpdate();
 
@@ -26,6 +24,7 @@ public class UserDAO implements IUserDAO {
             if (keys.next()) {
                 user.setId(keys.getInt(1));
             }
+            logger.info("User created " + user);
 
         } catch (SQLException e) {
             throw new RuntimeException("Failed to create user", e);
@@ -36,15 +35,11 @@ public class UserDAO implements IUserDAO {
     public User getUserById(Connection connection, int id) {
         String sql = """
                     SELECT
-                        u.id AS user_id,
+                        u.id,
                         u.username,
                         u.email,
-                        u.password_hash,
-                        u.created_at,
-                        r.id AS role_id,
-                        r.name AS role_name
+                        u.created_at
                     FROM users u
-                    JOIN roles r ON u.role_id = r.id
                     WHERE u.id = ?
                 """;
 
@@ -54,17 +49,15 @@ public class UserDAO implements IUserDAO {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                Role role = new Role(rs.getInt("role_id"), rs.getString("role_name"));
-                return new User(
-                        rs.getInt("user_id"),
+                User found = new User(rs.getInt("id"),
                         rs.getString("username"),
                         rs.getString("email"),
-                        rs.getString("password_hash"),
-                        role,
-                        rs.getTimestamp("created_at").toLocalDateTime()
-                );
-            }
+                        rs.getTimestamp("created_at").toLocalDateTime());
 
+                logger.info("Returned user " + found);
+
+                return found;
+            }
         } catch (SQLException e) {
             throw new RuntimeException("Failed to fetch user", e);
         }
@@ -73,30 +66,35 @@ public class UserDAO implements IUserDAO {
     }
 
     public User getUserByUsername(Connection connection, String username) {
-        String sql = "SELECT u.*, r.id AS role_id, r.name AS role_name " +
-                "FROM users u JOIN roles r ON u.role_id = r.id " +
-                "WHERE u.username = ?";
+        String sql = """
+                    SELECT
+                        u.id,
+                        u.username,
+                        u.email,
+                        u.created_at
+                    FROM users u
+                    WHERE u.username = ?
+                """;
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, username);
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                Role role = new Role(rs.getInt("role_id"), rs.getString("role_name"));
-                return new User(
-                        rs.getInt("id"),
+                User found = new User(rs.getInt("id"),
                         rs.getString("username"),
                         rs.getString("email"),
-                        rs.getString("password_hash"),
-                        role,
-                        rs.getTimestamp("created_at").toLocalDateTime()
-                );
+                        rs.getTimestamp("created_at").toLocalDateTime());
+
+                logger.info("Returned user " + found);
+
+                return found;
             }
 
-            return null; // Not found
         } catch (SQLException e) {
             throw new RuntimeException("Failed to fetch user by username", e);
         }
+        return null;
     }
 
 

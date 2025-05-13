@@ -1,16 +1,13 @@
 syntax = "proto3";
-option java_multiple_files = true;
 package grpc;
 
 import "google/protobuf/timestamp.proto";
-import "google/protobuf/wrappers.proto";
 
 message UserDTO {
     int32 id = 1;
     string username = 2;
     string email = 3;
-    google.protobuf.StringValue password_hash = 4;
-    google.protobuf.Timestamp created_at = 5;
+    google.protobuf.Timestamp created_at = 4;
 }
 
 // Request messages
@@ -32,6 +29,7 @@ message GetUserByUsernameRequest {
 message UserResponse {
     UserDTO user = 1;
 }
+
 
 // User service
 service UserService {

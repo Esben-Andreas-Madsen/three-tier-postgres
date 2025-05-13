@@ -1,0 +1,81 @@
+# Build Folders
+bin/
+obj/
+
+# User-specific files
+*.user
+*.userosscache
+*.suo
+*.sln.docstates
+
+# Rider project files
+.idea/
+*.sln.iml
+
+# VS Code settings
+.vscode/
+
+# Log files
+*.log
+
+# Debug and Release folders
+**/Debug/
+**/Release/
+**/x64/
+**/x86/
+**/build/
+**/out/
+
+# DotNet core folders
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Azure DevOps
+.env
+.env.*
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+# Configuration
+appsettings.Development.json
+appsettings.Local.json
+appsettings.Production.json
+
+# Secrets
+secrets.json
+
+# Entity Framework
+Migrations/
+
+# Docker
+docker-compose.yml
+docker-compose.*.yml
+.dockerignore
+
+# Visual Studio Code coverage
+TestResults/
+Coverage/
+
+# Packages
+*.nupkg
+*.snupkg
+packages/
+.nuget/
+*.csproj.nuget.g.props
+*.csproj.nuget.g.targets
+
+# Windows-specific files
+Thumbs.db
+Desktop.ini
+
+# Mac-specific files
+.DS_Store
+
+# Linux-specific files
+*~
+
+# Resharper / Rider settings
+.idea/
+*.sln.iml
