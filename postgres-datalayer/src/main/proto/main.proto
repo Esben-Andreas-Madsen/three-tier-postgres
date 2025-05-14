@@ -1,0 +1,9 @@
+syntax = "proto3";
+option java_multiple_files = true;
+package grpc;
+
+import "messages/artifact.proto";
+
+service GatewayService {
+  rpc CreateArtifact (CreateArtifactRequest) returns (ArtifactResponse);
+}

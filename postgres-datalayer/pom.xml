@@ -11,7 +11,7 @@
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
-        <protobuf.version>3.25.7</protobuf.version>
+        <protobuf.version>4.30.2</protobuf.version>
         <grpc.version>1.72.0</grpc.version>
     </properties>
 
@@ -85,11 +85,25 @@
             <artifactId>os-maven-plugin</artifactId>
             <version>1.7.1</version>
         </dependency>
+
+        <!-- DB pooling -->
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            <version>5.0.0</version>
+        </dependency>
+
     </dependencies>
 
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-idea-plugin</artifactId>
+                <version>2.2</version>
+            </plugin>
+
             <plugin>
                 <groupId>kr.motd.maven</groupId>
                 <artifactId>os-maven-plugin</artifactId>
@@ -110,12 +124,18 @@
                 <artifactId>protobuf-maven-plugin</artifactId>
                 <version>0.6.1</version>
                 <configuration>
-                    <protocArtifact>com.google.protobuf:protoc:${protobuf.version}:exe:${os.detected.classifier}</protocArtifact>
+
+                    <protoSourceRoot>src/main/proto
+                    </protoSourceRoot>
+                    <protocArtifact>com.google.protobuf:protoc:${protobuf.version}:exe:${os.detected.classifier}
+                    </protocArtifact>
                     <pluginId>grpc-java</pluginId>
-                    <pluginArtifact>io.grpc:protoc-gen-grpc-java:${grpc.version}:exe:${os.detected.classifier}</pluginArtifact>
+                    <pluginArtifact>io.grpc:protoc-gen-grpc-java:${grpc.version}:exe:${os.detected.classifier}
+                    </pluginArtifact>
                 </configuration>
                 <executions>
                     <execution>
+
                         <goals>
                             <goal>compile</goal>
                             <goal>compile-custom</goal>
