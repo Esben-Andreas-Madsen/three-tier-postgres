@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Protobuf Include="Protos\user.proto" GrpcServices="Client" />
+    <Protobuf Include="Protos\**\*.proto" GrpcServices="Client" AdditionalImportDirs="Protos;Protos\messages" />
   </ItemGroup>
 
 
