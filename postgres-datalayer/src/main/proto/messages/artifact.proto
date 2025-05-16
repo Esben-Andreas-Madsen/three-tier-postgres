@@ -1,0 +1,40 @@
+syntax = "proto3";
+option java_multiple_files = true;
+package grpc;
+
+enum Rarity {
+    Common = 0;
+    Uncommon = 1;
+    Rare = 2;
+    Epic = 3;
+    Legendary = 4;
+    Mythic = 5;
+}
+
+message ArtifactProto {
+  oneof identifier {
+    int32 id = 1;
+  }
+  string name = 2;
+  string origin_story = 3;
+  int32 power_level = 4;
+  Rarity rarity = 5;
+  string last_known_location = 6;
+  int32 estimated_value = 7;
+}
+
+message CreateArtifactRequest {
+  ArtifactProto artifactproto = 1;
+}
+
+message GetArtifactById {
+  int32 id = 1;
+}
+
+message GetArtifactByName {
+  string name = 1;
+}
+
+message ArtifactResponse {
+  ArtifactProto artifactproto = 1;
+}
