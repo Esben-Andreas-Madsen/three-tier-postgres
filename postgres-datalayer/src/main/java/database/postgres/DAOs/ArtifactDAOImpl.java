@@ -25,7 +25,7 @@ public class ArtifactDAOImpl implements ArtifactDAO {
             stmt.setString(1, artifact.getName());
             stmt.setString(2, artifact.getOriginStory());
             stmt.setInt(3, artifact.getPowerLevel());
-            stmt.setObject(4, artifact.getRarity());
+            stmt.setObject(4, artifact.getRarity().name(), java.sql.Types.OTHER);
             stmt.setString(5, artifact.getLastKnownLocation());
             stmt.setInt(6, artifact.getEstimatedValue());
 
