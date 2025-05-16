@@ -10,12 +10,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Logger;
 
-public class ArtifactDAOImpl implements ArtifactDAO{
+public class ArtifactDAOImpl implements ArtifactDAO {
     private final HikariDataSource dataSource;
     private static final Logger logger = Logger.getLogger(ArtifactDAOImpl.class.getName());
 
     public ArtifactDAOImpl(HikariDataSource dataSource) {
-
         this.dataSource = dataSource;
     }
 
@@ -40,19 +39,91 @@ public class ArtifactDAOImpl implements ArtifactDAO{
                 return artifact.toBuilder()               // Use the builder to create the ArtifactProto with the generated ID
                         .setId(generatedId)
                         .build();
-            } else {
-                throw new SQLException("Failed to insert artifact, no ID returned.");
             }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to insert artifact", e);
         }
+        return null;
     }
 
     @Override
     public Artifact getArtifactById(int id) {
+        String sql = """
+                    SELECT
+                        a.id,
+                        a.name,
+                        a.origin_story,
+                        a.power_level,
+                        a.rarity,
+                        a.last_known_location,
+                        a.estimated_value
+                    FROM artifacts a
+                    WHERE a.id = ?
+                """;
+
+
+        try (PreparedStatement stmt = dataSource.getConnection().prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                Artifact found = new Artifact(rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getString("origin_story"),
+                        rs.getInt("power_level"),
+                        (Rarity) rs.getObject("rarity"),
+                        rs.getString("last_known_location"),
+                        rs.getInt("estimated_value")
+                );
+
+                logger.info("SELECT: " + found);
+
+                return found;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to fetch artifact", e);
+        }
+
         return null;
     }
 
     @Override
     public Artifact getArtifactByName(String name) {
+        String sql = """
+                    SELECT
+                        a.id,
+                        a.name,
+                        a.origin_story,
+                        a.power_level,
+                        a.rarity,
+                        a.last_known_location,
+                        a.estimated_value
+                    FROM artifacts a
+                    WHERE a.name = ?
+                """;
+
+
+        try (PreparedStatement stmt = dataSource.getConnection().prepareStatement(sql)) {
+            stmt.setString(1, name);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                Artifact found = new Artifact(rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getString("origin_story"),
+                        rs.getInt("power_level"),
+                        (Rarity) rs.getObject("rarity"),
+                        rs.getString("last_known_location"),
+                        rs.getInt("estimated_value")
+                );
+
+                logger.info("SELECT: " + found);
+
+                return found;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to fetch artifact", e);
+        }
         return null;
     }
 
