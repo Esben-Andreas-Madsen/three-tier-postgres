@@ -2,8 +2,6 @@ package database.postgres.DAOs;
 
 import com.zaxxer.hikari.HikariDataSource;
 import grpc.ArtifactProto;
-import shared.DTOs.Artifact;
-import shared.DTOs.Rarity;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -27,7 +25,7 @@ public class ArtifactDAOImpl implements ArtifactDAO {
             stmt.setString(1, artifact.getName());
             stmt.setString(2, artifact.getOriginStory());
             stmt.setInt(3, artifact.getPowerLevel());
-            stmt.setObject(4, Rarity.valueOf(artifact.getRarity()).name(), java.sql.Types.OTHER);
+            stmt.setObject(4, artifact.getRarity());
             stmt.setString(5, artifact.getLastKnownLocation());
             stmt.setInt(6, artifact.getEstimatedValue());
 
@@ -47,7 +45,7 @@ public class ArtifactDAOImpl implements ArtifactDAO {
     }
 
     @Override
-    public Artifact getArtifactById(int id) {
+    public ArtifactProto getArtifactById(int id) {
         String sql = """
                     SELECT
                         a.id,
@@ -67,14 +65,15 @@ public class ArtifactDAOImpl implements ArtifactDAO {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                Artifact found = new Artifact(rs.getInt("id"),
-                        rs.getString("name"),
-                        rs.getString("origin_story"),
-                        rs.getInt("power_level"),
-                        (Rarity) rs.getObject("rarity"),
-                        rs.getString("last_known_location"),
-                        rs.getInt("estimated_value")
-                );
+                ArtifactProto found = ArtifactProto.newBuilder()
+                        .setId(rs.getInt("id"))
+                        .setName(rs.getString("name"))
+                        .setOriginStory(rs.getString("origin_story"))
+                        .setPowerLevel(rs.getInt("power_level"))
+                        .setRarity((grpc.Rarity) rs.getObject("rarity"))
+                        .setLastKnownLocation(rs.getString("last_known_location"))
+                        .setEstimatedValue(rs.getInt("estimated_value"))
+                        .build();
 
                 logger.info("SELECT: " + found);
 
@@ -88,7 +87,7 @@ public class ArtifactDAOImpl implements ArtifactDAO {
     }
 
     @Override
-    public Artifact getArtifactByName(String name) {
+    public ArtifactProto getArtifactByName(String name) {
         String sql = """
                     SELECT
                         a.id,
@@ -108,14 +107,15 @@ public class ArtifactDAOImpl implements ArtifactDAO {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                Artifact found = new Artifact(rs.getInt("id"),
-                        rs.getString("name"),
-                        rs.getString("origin_story"),
-                        rs.getInt("power_level"),
-                        (Rarity) rs.getObject("rarity"),
-                        rs.getString("last_known_location"),
-                        rs.getInt("estimated_value")
-                );
+                ArtifactProto found = ArtifactProto.newBuilder()
+                        .setId(rs.getInt("id"))
+                        .setName(rs.getString("name"))
+                        .setOriginStory(rs.getString("origin_story"))
+                        .setPowerLevel(rs.getInt("power_level"))
+                        .setRarity((grpc.Rarity) rs.getObject("rarity"))
+                        .setLastKnownLocation(rs.getString("last_known_location"))
+                        .setEstimatedValue(rs.getInt("estimated_value"))
+                        .build();
 
                 logger.info("SELECT: " + found);
 
@@ -144,7 +144,7 @@ public class ArtifactDAOImpl implements ArtifactDAO {
             stmt.setString(1, artifact.getName());
             stmt.setString(2, artifact.getOriginStory());
             stmt.setInt(3, artifact.getPowerLevel());
-            stmt.setObject(4, Rarity.valueOf(artifact.getRarity()).name(), java.sql.Types.OTHER);
+            stmt.setObject(4, artifact.getRarity());
             stmt.setString(5, artifact.getLastKnownLocation());
             stmt.setInt(6, artifact.getEstimatedValue());
             stmt.setInt(7, artifact.getId());
