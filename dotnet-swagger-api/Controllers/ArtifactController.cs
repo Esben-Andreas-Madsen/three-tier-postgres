@@ -71,5 +71,24 @@ namespace dotnet_swagger_api.Controllers
                 return StatusCode((int)ex.StatusCode, ex.Status.Detail);
             }
         }
+
+/*         [HttpGet("{id}")]
+        public async Task<IActionResult> GetArtifactById(int id)
+        {
+            try
+            {
+                var artifact = await _artifactService.GetArtifactAsync(id);
+                return Ok(new
+                {
+                    Id = response.User.Id,
+                    Username = response.User.Username,
+                    Email = response.User.Email
+                });
+            }
+            catch (RpcException ex)
+            {
+                return StatusCode((int)ex.StatusCode, ex.Status.Detail);
+            }
+        } */
     }
 }
