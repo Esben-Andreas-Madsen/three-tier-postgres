@@ -19,7 +19,7 @@ public class ArtifactDAOImpl implements ArtifactDAO {
     }
 
     @Override
-    public ArtifactProto createArtifact(ArtifactProto artifact) throws SQLException {
+    public ArtifactProto createArtifact(ArtifactProto artifact) {
         String insertQuery = "INSERT INTO artifacts (name, origin_story, power_level, rarity, last_known_location, estimated_value) " +
                 "VALUES (?, ?, ?, ?, ?, ?) RETURNING id";
 
@@ -128,12 +128,41 @@ public class ArtifactDAOImpl implements ArtifactDAO {
     }
 
     @Override
-    public void updateArtifact(Artifact artifact) {
+    public void updateArtifact(ArtifactProto artifact) {
+        String sql = """
+                UPDATE artifact
+                SET name = ?,
+                    origin_story = ?,
+                    power_level = ?,
+                    rarity = ?,
+                    last_known_location = ?,
+                    estimated_value = ?
+                WHERE id = ?;
+                """;
 
+        try (PreparedStatement stmt = dataSource.getConnection().prepareStatement(sql)) {
+            stmt.setString(1, artifact.getName());
+            stmt.setString(2, artifact.getOriginStory());
+            stmt.setInt(3, artifact.getPowerLevel());
+            stmt.setObject(4, Rarity.valueOf(artifact.getRarity()).name(), java.sql.Types.OTHER);
+            stmt.setString(5, artifact.getLastKnownLocation());
+            stmt.setInt(6, artifact.getEstimatedValue());
+            stmt.setInt(7, artifact.getId());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to update artifact", e);
+        }
     }
 
     @Override
     public void deleteArtifact(int id) {
+        String sql = "DELETE FROM artifacts WHERE id = ?";
 
+        try (PreparedStatement stmt = dataSource.getConnection().prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to delete artifact", e);
+        }
     }
 }
