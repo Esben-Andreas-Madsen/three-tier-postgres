@@ -113,6 +113,16 @@
 
 
     <build>
+        <testResources>
+            <testResource>
+                <directory>${project.basedir}/database</directory>
+                <includes>
+                    <include>init.sql</include>
+                </includes>
+            </testResource>
+        </testResources>
+
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
