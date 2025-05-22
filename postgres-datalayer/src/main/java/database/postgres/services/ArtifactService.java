@@ -2,6 +2,7 @@ package database.postgres.services;
 
 import database.postgres.DAOs.ArtifactDAO;
 import grpc.ArtifactProto;
+import shared.DTOs.Artifact;
 
 public class ArtifactService {
 
@@ -15,13 +16,15 @@ public class ArtifactService {
      * Creates a new artifact in the database.
      *
      * @param artifact The Artifact object to be created.
+     * @return
      */
-    public void createArtifact(ArtifactProto artifact) {
+    public Artifact createArtifact(Artifact artifact) {
         if (artifact.getPowerLevel() < 0 || artifact.getPowerLevel() > 100) {
             throw new IllegalArgumentException("Power level must be between 0 and 100.");
         }
 
         artifactDAO.createArtifact(artifact);
+        return artifact;
     }
 
     /**
