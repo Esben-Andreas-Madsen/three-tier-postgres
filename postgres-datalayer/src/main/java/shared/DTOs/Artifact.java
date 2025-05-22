@@ -41,6 +41,9 @@ public class Artifact {
         this.estimated_value = requestToArtifact.estimated_value;
     }
 
+    public Artifact() {
+    }
+
     @Override
     public String toString() {
         return "Artifact{" +
@@ -70,19 +73,19 @@ public class Artifact {
         this.name = name;
     }
 
-    public String getOrigin_story() {
+    public String getOriginStory() {
         return origin_story;
     }
 
-    public void setOrigin_story(String origin_story) {
+    public void setOriginStory(String origin_story) {
         this.origin_story = origin_story;
     }
 
-    public int getPower_level() {
+    public int getPowerLevel() {
         return power_level;
     }
 
-    public void setPower_level(int power_level) {
+    public void setPowerLevel(int power_level) {
         this.power_level = power_level;
     }
 
@@ -94,19 +97,19 @@ public class Artifact {
         this.rarity = rarity;
     }
 
-    public String getLast_known_location() {
+    public String getLastKnownLocation() {
         return last_known_location;
     }
 
-    public void setLast_known_location(String last_known_location) {
+    public void setLastKnownLocation(String last_known_location) {
         this.last_known_location = last_known_location;
     }
 
-    public int getEstimated_value() {
+    public int getEstimatedValue() {
         return estimated_value;
     }
 
-    public void setEstimated_value(int estimated_value) {
+    public void setEstimatedValue(int estimated_value) {
         this.estimated_value = estimated_value;
     }
 }
