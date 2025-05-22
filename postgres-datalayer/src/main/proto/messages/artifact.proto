@@ -2,7 +2,7 @@ syntax = "proto3";
 option java_multiple_files = true;
 package grpc;
 
-enum Rarity {
+enum RarityProto {
     Common = 0;
     Uncommon = 1;
     Rare = 2;
@@ -18,7 +18,7 @@ message ArtifactProto {
   string name = 2;
   string origin_story = 3;
   int32 power_level = 4;
-  Rarity rarity = 5;
+  RarityProto rarity = 5;
   string last_known_location = 6;
   int32 estimated_value = 7;
 }
