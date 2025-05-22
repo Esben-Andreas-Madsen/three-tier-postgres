@@ -2,6 +2,8 @@ package database.postgres.DAOs;
 
 import com.zaxxer.hikari.HikariDataSource;
 import grpc.ArtifactProto;
+import grpc.RarityProto;
+import shared.DTOs.Artifact;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,7 +19,7 @@ public class ArtifactDAOImpl implements ArtifactDAO {
     }
 
     @Override
-    public ArtifactProto createArtifact(ArtifactProto artifact) {
+    public Artifact createArtifact(Artifact artifact) {
         String insertQuery = "INSERT INTO artifacts (name, origin_story, power_level, rarity, last_known_location, estimated_value) " +
                 "VALUES (?, ?, ?, ?, ?, ?) RETURNING id";
 
@@ -34,9 +36,8 @@ public class ArtifactDAOImpl implements ArtifactDAO {
 
             if (resultSet.next()) {
                 int generatedId = resultSet.getInt("id");  // The generated ID from the database
-                return artifact.toBuilder()               // Use the builder to create the ArtifactProto with the generated ID
-                        .setId(generatedId)
-                        .build();
+                artifact.setId(generatedId);  // or create new Artifact with ID set
+                return artifact;
             }
         } catch (SQLException e) {
             throw new RuntimeException("Failed to insert artifact", e);
@@ -70,7 +71,7 @@ public class ArtifactDAOImpl implements ArtifactDAO {
                         .setName(rs.getString("name"))
                         .setOriginStory(rs.getString("origin_story"))
                         .setPowerLevel(rs.getInt("power_level"))
-                        .setRarity((grpc.Rarity) rs.getObject("rarity"))
+                        .setRarity((RarityProto) rs.getObject("rarity"))
                         .setLastKnownLocation(rs.getString("last_known_location"))
                         .setEstimatedValue(rs.getInt("estimated_value"))
                         .build();
@@ -112,7 +113,8 @@ public class ArtifactDAOImpl implements ArtifactDAO {
                         .setName(rs.getString("name"))
                         .setOriginStory(rs.getString("origin_story"))
                         .setPowerLevel(rs.getInt("power_level"))
-                        .setRarity((grpc.Rarity) rs.getObject("rarity"))
+                        .setRarity(RarityProto.valueOf(rs.getString("rarity")))
+                        //stmt.setObject(4, artifact.getRarity().name(), java.sql.Types.OTHER)
                         .setLastKnownLocation(rs.getString("last_known_location"))
                         .setEstimatedValue(rs.getInt("estimated_value"))
                         .build();
