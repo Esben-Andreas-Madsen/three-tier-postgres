@@ -1,4 +1,4 @@
-package shared.DTOs;
+package DTOs;
 
 public class Artifact {
     private int id;
