@@ -6,4 +6,6 @@ import "messages/artifact.proto";
 
 service GatewayService {
   rpc CreateArtifact (CreateArtifactRequest) returns (ArtifactResponse);
+  rpc GetArtifactById (GetArtifactByIdRequest) returns (ArtifactResponse);
+
 }
