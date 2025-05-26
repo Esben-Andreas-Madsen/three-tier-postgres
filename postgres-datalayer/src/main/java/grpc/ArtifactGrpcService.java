@@ -36,7 +36,25 @@ public class ArtifactGrpcService extends GatewayServiceGrpc.GatewayServiceImplBa
         }
     }
 
-//    @Override void getArtifactById() {
-//
-//    }
+    @Override
+    public void getArtifactById(GetArtifactByIdRequest request, StreamObserver<ArtifactResponse> responseObserver) {
+        try {
+            int id = request.getId();
+
+            Artifact savedArtifact = artifactService.getArtifactById(id);
+
+            // Map domain model back to proto (with generated ID)
+            ArtifactProto artifactProto = ArtifactMapper.INSTANCE.toProto(savedArtifact);
+
+            ArtifactResponse response = ArtifactResponse.newBuilder()
+                    .setArtifactproto(artifactProto)
+                    .build();
+
+            responseObserver.onNext(response);
+            responseObserver.onCompleted();
+
+        } catch (Exception e) {
+            responseObserver.onError(e);
+        }
+    }
 }
