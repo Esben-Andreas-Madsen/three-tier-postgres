@@ -1,5 +1,6 @@
 package database.postgres.DAOs;
 
+import DTOs.Rarity;
 import com.zaxxer.hikari.HikariDataSource;
 import grpc.ArtifactProto;
 import grpc.RarityProto;
@@ -46,7 +47,7 @@ public class ArtifactDAOImpl implements ArtifactDAO {
     }
 
     @Override
-    public ArtifactProto getArtifactById(int id) {
+    public Artifact getArtifactById(int id) {
         String sql = """
                     SELECT
                         a.id,
@@ -66,15 +67,14 @@ public class ArtifactDAOImpl implements ArtifactDAO {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                ArtifactProto found = ArtifactProto.newBuilder()
-                        .setId(rs.getInt("id"))
-                        .setName(rs.getString("name"))
-                        .setOriginStory(rs.getString("origin_story"))
-                        .setPowerLevel(rs.getInt("power_level"))
-                        .setRarity((RarityProto) rs.getObject("rarity"))
-                        .setLastKnownLocation(rs.getString("last_known_location"))
-                        .setEstimatedValue(rs.getInt("estimated_value"))
-                        .build();
+                Artifact found = new Artifact();
+                found.setId(rs.getInt("id"));
+                found.setName(rs.getString("name"));
+                found.setOriginStory(rs.getString("origin_story"));
+                found.setPowerLevel(rs.getInt("power_level"));
+                found.setRarity(Rarity.valueOf(found.getRarity().name()));
+                found.setLastKnownLocation(rs.getString("last_known_location"));
+                found.setEstimatedValue(rs.getInt("estimated_value"));
 
                 logger.info("SELECT: " + found);
 
@@ -88,7 +88,7 @@ public class ArtifactDAOImpl implements ArtifactDAO {
     }
 
     @Override
-    public ArtifactProto getArtifactByName(String name) {
+    public Artifact getArtifactByName(String name) {
         String sql = """
                     SELECT
                         a.id,
@@ -108,16 +108,14 @@ public class ArtifactDAOImpl implements ArtifactDAO {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                ArtifactProto found = ArtifactProto.newBuilder()
-                        .setId(rs.getInt("id"))
-                        .setName(rs.getString("name"))
-                        .setOriginStory(rs.getString("origin_story"))
-                        .setPowerLevel(rs.getInt("power_level"))
-                        .setRarity(RarityProto.valueOf(rs.getString("rarity")))
-                        //stmt.setObject(4, artifact.getRarity().name(), java.sql.Types.OTHER)
-                        .setLastKnownLocation(rs.getString("last_known_location"))
-                        .setEstimatedValue(rs.getInt("estimated_value"))
-                        .build();
+                Artifact found = new Artifact();
+                        found.setId(rs.getInt("id"));
+                        found.setName(rs.getString("name"));
+                        found.setOriginStory(rs.getString("origin_story"));
+                        found.setPowerLevel(rs.getInt("power_level"));
+                        found.setRarity(Rarity.valueOf(found.getRarity().name()));
+                        found.setLastKnownLocation(rs.getString("last_known_location"));
+                        found.setEstimatedValue(rs.getInt("estimated_value"));
 
                 logger.info("SELECT: " + found);
 
@@ -130,7 +128,7 @@ public class ArtifactDAOImpl implements ArtifactDAO {
     }
 
     @Override
-    public void updateArtifact(ArtifactProto artifact) {
+    public void updateArtifact(Artifact artifact) {
         String sql = """
                 UPDATE artifact
                 SET name = ?,
@@ -151,6 +149,8 @@ public class ArtifactDAOImpl implements ArtifactDAO {
             stmt.setInt(6, artifact.getEstimatedValue());
             stmt.setInt(7, artifact.getId());
             stmt.executeUpdate();
+
+            logger.info("UPDATED: " + artifact);
         } catch (SQLException e) {
             throw new RuntimeException("Failed to update artifact", e);
         }
