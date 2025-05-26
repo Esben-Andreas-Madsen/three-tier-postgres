@@ -6,8 +6,8 @@ import DTOs.Artifact;
 public interface ArtifactDAO {
     Artifact createArtifact(Artifact artifact);
     // TODO return artifact instead by utilizing mappers
-    ArtifactProto getArtifactById(int id);
-    ArtifactProto getArtifactByName(String name);
-    void updateArtifact(ArtifactProto artifact);
+    Artifact getArtifactById(int id);
+    Artifact getArtifactByName(String name);
+    void updateArtifact(Artifact artifact);
     void deleteArtifact(int id);
 }
