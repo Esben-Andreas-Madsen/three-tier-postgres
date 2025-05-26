@@ -2,7 +2,7 @@ package database.postgres.services;
 
 import database.postgres.DAOs.ArtifactDAO;
 import grpc.ArtifactProto;
-import shared.DTOs.Artifact;
+import DTOs.Artifact;
 
 public class ArtifactService {
 
@@ -33,7 +33,7 @@ public class ArtifactService {
      * @param id The artifact ID.
      * @return The Artifact object or null if not found.
      */
-    public ArtifactProto getArtifactById(int id) {
+    public Artifact getArtifactById(int id) {
         return artifactDAO.getArtifactById(id);
     }
 

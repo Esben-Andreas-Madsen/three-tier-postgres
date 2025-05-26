@@ -7,8 +7,8 @@ import database.postgres.DAOs.ArtifactDAOImpl;
 import mappers.ArtifactMapper;
 import org.junit.jupiter.api.*;
 import org.testcontainers.containers.PostgreSQLContainer;
-import shared.DTOs.Artifact;
-import shared.DTOs.Rarity;
+import DTOs.Artifact;
+import DTOs.Rarity;
 
 import java.sql.Connection;
 import java.sql.Statement;
@@ -64,8 +64,8 @@ public class ArtifactDAOImplTest {
         // Act
         artifactDAO.createArtifact(artifact);
 
-        // Assuming you implemented getArtifactByName in DAO
-        Artifact fetched = ArtifactMapper.INSTANCE.toArtifact(artifactDAO.getArtifactByName("Excalibur"));
+        // Attempt finding the created artifact
+        Artifact fetched = artifactDAO.getArtifactByName("Excalibur");
 
         // Assert
         Assertions.assertNotNull(fetched);

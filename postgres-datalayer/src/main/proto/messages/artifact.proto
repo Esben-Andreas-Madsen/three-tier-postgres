@@ -27,12 +27,16 @@ message CreateArtifactRequest {
   ArtifactProto artifactproto = 1;
 }
 
-message GetArtifactById {
+message GetArtifactByIdRequest {
   int32 id = 1;
 }
 
-message GetArtifactByName {
+message GetArtifactByNameRequest {
   string name = 1;
+}
+
+message UpdateArtifactRequest {
+  ArtifactProto artifactproto = 1;
 }
 
 message ArtifactResponse {
