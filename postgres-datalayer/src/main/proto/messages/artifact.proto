@@ -35,6 +35,10 @@ message GetArtifactByNameRequest {
   string name = 1;
 }
 
+message UpdateArtifactRequest {
+  ArtifactProto artifactproto = 1;
+}
+
 message ArtifactResponse {
   ArtifactProto artifactproto = 1;
 }
