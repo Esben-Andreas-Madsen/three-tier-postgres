@@ -3,7 +3,7 @@ package database.postgres.DAOs;
 import com.zaxxer.hikari.HikariDataSource;
 import grpc.ArtifactProto;
 import grpc.RarityProto;
-import shared.DTOs.Artifact;
+import DTOs.Artifact;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

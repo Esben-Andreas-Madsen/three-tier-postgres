@@ -1,7 +1,7 @@
 package database.postgres.DAOs;
 
 import grpc.ArtifactProto;
-import shared.DTOs.Artifact;
+import DTOs.Artifact;
 
 public interface ArtifactDAO {
     Artifact createArtifact(Artifact artifact);

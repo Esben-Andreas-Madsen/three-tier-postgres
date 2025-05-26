@@ -3,7 +3,7 @@ package grpc;
 import database.postgres.services.ArtifactService;
 import io.grpc.stub.StreamObserver;
 import mappers.ArtifactMapper;
-import shared.DTOs.Artifact;
+import DTOs.Artifact;
 
 public class ArtifactGrpcService extends GatewayServiceGrpc.GatewayServiceImplBase {
     private final ArtifactService artifactService;

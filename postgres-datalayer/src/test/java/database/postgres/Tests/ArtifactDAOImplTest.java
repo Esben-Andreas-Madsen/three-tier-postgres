@@ -7,8 +7,8 @@ import database.postgres.DAOs.ArtifactDAOImpl;
 import mappers.ArtifactMapper;
 import org.junit.jupiter.api.*;
 import org.testcontainers.containers.PostgreSQLContainer;
-import shared.DTOs.Artifact;
-import shared.DTOs.Rarity;
+import DTOs.Artifact;
+import DTOs.Rarity;
 
 import java.sql.Connection;
 import java.sql.Statement;

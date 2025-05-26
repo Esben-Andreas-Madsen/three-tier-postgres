@@ -1,13 +1,13 @@
 package mappers;
 
+import DTOs.Rarity;
 import grpc.ArtifactProto;
 import grpc.RarityProto;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.ValueMapping;
 import org.mapstruct.factory.Mappers;
-import shared.DTOs.Artifact;
-import shared.DTOs.Rarity;
+import DTOs.Artifact;
 
 @Mapper
 public interface ArtifactMapper {
@@ -20,7 +20,7 @@ public interface ArtifactMapper {
 
     // handle the enum conversion
     @ValueMapping(source = "UNRECOGNIZED", target = MappingConstants.NULL)
-    shared.DTOs.Rarity map(RarityProto rarity);
+    Rarity map(RarityProto rarity);
 
-    RarityProto map(shared.DTOs.Rarity rarity);
+    RarityProto map(Rarity rarity);
 }

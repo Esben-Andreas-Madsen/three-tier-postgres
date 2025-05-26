@@ -2,7 +2,7 @@ package database.postgres.services;
 
 import database.postgres.DAOs.ArtifactDAO;
 import grpc.ArtifactProto;
-import shared.DTOs.Artifact;
+import DTOs.Artifact;
 
 public class ArtifactService {
 
