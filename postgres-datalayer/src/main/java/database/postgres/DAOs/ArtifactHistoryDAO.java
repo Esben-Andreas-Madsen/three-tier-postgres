@@ -5,6 +5,6 @@ import DTOs.ArtifactHistory;
 public interface ArtifactHistoryDAO {
     ArtifactHistory createArtifactHistory(ArtifactHistory artifactHistory, String artifactName);
     ArtifactHistory getArtifactHistoryById(int id);
-    void updateArtifactHistory();
-
+    void updateArtifactHistory(int id);
+    void deleteArtifactHistory(int id);
 }
