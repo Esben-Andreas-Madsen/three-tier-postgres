@@ -35,4 +35,8 @@ public class ArtifactGrpcService extends GatewayServiceGrpc.GatewayServiceImplBa
             responseObserver.onError(e);
         }
     }
+
+//    @Override void getArtifactById() {
+//
+//    }
 }
