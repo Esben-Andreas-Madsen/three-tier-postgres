@@ -3,9 +3,21 @@ option java_multiple_files = true;
 package grpc;
 
 import "messages/artifact.proto";
+import "messages/artifactHistory.proto";
 
 service GatewayService {
+  // Artifact
   rpc CreateArtifact (CreateArtifactRequest) returns (ArtifactResponse);
   rpc GetArtifactById (GetArtifactByIdRequest) returns (ArtifactResponse);
+  rpc GetArtifactByName (GetArtifactByNameRequest) returns (ArtifactResponse);
+  rpc UpdateArtifact (UpdateArtifactRequest) returns (UpdateArtifactResponse);
+  rpc DeleteArtifact (DeleteArtifactRequest) returns (DeleteArtifactResponse);
+  rpc GetAllArtifacts (GetAllArtifactRequests) returns (stream ArtifactResponse);
 
+  // Artifact history
+  rpc CreateArtifactHistory (CreateArtifactHistoryRequest) returns (ArtifactHistoryResponse);
+  rpc GetArtifactHistoryById (GetArtifactHistoryByIdRequest) returns (ArtifactHistoryResponse);
+  rpc UpdateArtifactHistory (UpdateArtifactHistoryRequest) returns (UpdateArtifactResponse);
+  rpc DeleteArtifactHistory (DeleteArtifactHistoryResponse) returns (DeleteArtifactHistoryResponse);
+  rpc GetAllArtifactHistories (GetAllArtifactHistoriesRequest) returns (stream ArtifactHistoryResponse);
 }
