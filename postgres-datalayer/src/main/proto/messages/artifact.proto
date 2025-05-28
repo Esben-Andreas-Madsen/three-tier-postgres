@@ -42,3 +42,13 @@ message UpdateArtifactRequest {
 message ArtifactResponse {
   ArtifactProto artifactproto = 1;
 }
+
+message UpdateArtifactResponse {}
+
+message DeleteArtifactRequest {
+  int32 id = 1;
+}
+
+message DeleteArtifactResponse {}
+
+message GetAllArtifactRequests {}

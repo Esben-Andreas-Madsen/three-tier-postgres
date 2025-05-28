@@ -18,6 +18,7 @@ public interface ArtifactMapper {
 
     ArtifactProto toProto(Artifact artifact);
 
+
     // handle the enum conversion
     @ValueMapping(source = "UNRECOGNIZED", target = MappingConstants.NULL)
     Rarity map(RarityProto rarity);
