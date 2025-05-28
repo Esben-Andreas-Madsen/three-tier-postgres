@@ -4,7 +4,7 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import database.postgres.DAOs.ArtifactDAO;
 import database.postgres.DAOs.ArtifactDAOImpl;
-import database.postgres.services.ArtifactService;
+import database.postgres.services.ArtifactServiceImpl;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import java.io.IOException;
@@ -38,10 +38,10 @@ public class GrpcServer {
     public GrpcServer(int port) {
         this.port = port;
         ArtifactDAO artifactDAO = new ArtifactDAOImpl(dataSource);
-        ArtifactService artifactService = new ArtifactService(artifactDAO);
+        ArtifactServiceImpl artifactServiceImpl = new ArtifactServiceImpl(artifactDAO);
 
         this.server = ServerBuilder.forPort(port)
-                .addService(new ArtifactGrpcService(artifactService))
+                .addService(new ArtifactGrpcService(artifactServiceImpl))
                 .build();
     }
 
