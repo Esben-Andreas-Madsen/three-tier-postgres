@@ -9,6 +9,8 @@ import DTOs.Artifact;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 public class ArtifactDAOImpl implements ArtifactDAO {
@@ -109,13 +111,13 @@ public class ArtifactDAOImpl implements ArtifactDAO {
 
             if (rs.next()) {
                 Artifact found = new Artifact();
-                        found.setId(rs.getInt("id"));
-                        found.setName(rs.getString("name"));
-                        found.setOriginStory(rs.getString("origin_story"));
-                        found.setPowerLevel(rs.getInt("power_level"));
-                        found.setRarity(Rarity.valueOf(found.getRarity().name()));
-                        found.setLastKnownLocation(rs.getString("last_known_location"));
-                        found.setEstimatedValue(rs.getInt("estimated_value"));
+                found.setId(rs.getInt("id"));
+                found.setName(rs.getString("name"));
+                found.setOriginStory(rs.getString("origin_story"));
+                found.setPowerLevel(rs.getInt("power_level"));
+                found.setRarity(Rarity.valueOf(found.getRarity().name()));
+                found.setLastKnownLocation(rs.getString("last_known_location"));
+                found.setEstimatedValue(rs.getInt("estimated_value"));
 
                 logger.info("SELECT: " + found);
 
@@ -165,6 +167,30 @@ public class ArtifactDAOImpl implements ArtifactDAO {
             stmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException("Failed to delete artifact", e);
+        }
+    }
+
+    @Override
+    public List<Artifact> getAllArtifacts() {
+        String sql = "SELECT * FROM artifacts";
+        List<Artifact> artifacts = new ArrayList<>();
+
+        try (PreparedStatement stmt = dataSource.getConnection().prepareStatement(sql)) {
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Artifact found = new Artifact();
+                found.setId(rs.getInt("id"));
+                found.setName(rs.getString("name"));
+                found.setOriginStory(rs.getString("origin_story"));
+                found.setPowerLevel(rs.getInt("power_level"));
+                found.setRarity(Rarity.valueOf(found.getRarity().name()));
+                found.setLastKnownLocation(rs.getString("last_known_location"));
+                found.setEstimatedValue(rs.getInt("estimated_value"));
+                artifacts.add(found);
+            }
+            return artifacts;
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to get all artifacts", e);
         }
     }
 }
