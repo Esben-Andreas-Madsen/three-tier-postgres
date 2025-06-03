@@ -1,14 +1,14 @@
 package database.postgres.Tests;
 
+import DTOs.Artifact;
+import DTOs.Rarity;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import database.postgres.DAOs.ArtifactDAO;
 import database.postgres.DAOs.ArtifactDAOImpl;
-import mappers.ArtifactMapper;
+import database.postgres.DAOs.ArtifactHistoryDAOImpl;
 import org.junit.jupiter.api.*;
 import org.testcontainers.containers.PostgreSQLContainer;
-import DTOs.Artifact;
-import DTOs.Rarity;
 
 import java.sql.Connection;
 import java.sql.Statement;
