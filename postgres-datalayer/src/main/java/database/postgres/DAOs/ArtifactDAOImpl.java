@@ -2,10 +2,9 @@ package database.postgres.DAOs;
 
 import DTOs.Rarity;
 import com.zaxxer.hikari.HikariDataSource;
-import grpc.ArtifactProto;
-import grpc.RarityProto;
 import DTOs.Artifact;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,7 +14,7 @@ import java.util.logging.Logger;
 
 public class ArtifactDAOImpl implements ArtifactDAO {
     private final HikariDataSource dataSource;
-    private static final Logger logger = Logger.getLogger(ArtifactDAOImpl.class.getName());
+    private static final Logger logger = Logger.getLogger(ArtifactHistoryDAOImpl.class.getName());
 
     public ArtifactDAOImpl(HikariDataSource dataSource) {
         this.dataSource = dataSource;
@@ -23,10 +22,20 @@ public class ArtifactDAOImpl implements ArtifactDAO {
 
     @Override
     public Artifact createArtifact(Artifact artifact) {
-        String insertQuery = "INSERT INTO artifacts (name, origin_story, power_level, rarity, last_known_location, estimated_value) " +
-                "VALUES (?, ?, ?, ?, ?, ?) RETURNING id";
-
-        try (PreparedStatement stmt = dataSource.getConnection().prepareStatement(insertQuery)) {
+        String sql = """
+                INSERT INTO artifacts (
+                name, 
+                origin_story, 
+                power_level, 
+                rarity, 
+                last_known_location, 
+                estimated_value)
+                VALUES (?, ?, ?, ?, ?, ?) RETURNING id
+                """;
+        try (
+                Connection conn = dataSource.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql)
+        ) {
             stmt.setString(1, artifact.getName());
             stmt.setString(2, artifact.getOriginStory());
             stmt.setInt(3, artifact.getPowerLevel());
@@ -34,18 +43,20 @@ public class ArtifactDAOImpl implements ArtifactDAO {
             stmt.setString(5, artifact.getLastKnownLocation());
             stmt.setInt(6, artifact.getEstimatedValue());
 
-            ResultSet resultSet = stmt.executeQuery();
-            logger.info("INSERT: " + artifact);
+            try (ResultSet resultSet = stmt.executeQuery();) {
+                if (resultSet.next()) {
+                    int generatedId = resultSet.getInt("id");
+                    artifact.setId(generatedId);
 
-            if (resultSet.next()) {
-                int generatedId = resultSet.getInt("id");  // The generated ID from the database
-                artifact.setId(generatedId);  // or create new Artifact with ID set
-                return artifact;
+                    logger.info("INSERT: " + artifact);
+                    return artifact;
+                } else {
+                    throw new RuntimeException("Artifact insert did not return an ID.");
+                }
             }
         } catch (SQLException e) {
             throw new RuntimeException("Failed to insert artifact", e);
         }
-        return null;
     }
 
     @Override
@@ -62,31 +73,31 @@ public class ArtifactDAOImpl implements ArtifactDAO {
                     FROM artifacts a
                     WHERE a.id = ?
                 """;
-
-
-        try (PreparedStatement stmt = dataSource.getConnection().prepareStatement(sql)) {
+        try (
+                Connection conn = dataSource.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql)
+        ) {
             stmt.setInt(1, id);
-            ResultSet rs = stmt.executeQuery();
+            try (ResultSet rs = stmt.executeQuery();) {
+                if (rs.next()) {
+                    Artifact found = new Artifact();
+                    found.setId(rs.getInt("id"));
+                    found.setName(rs.getString("name"));
+                    found.setOriginStory(rs.getString("origin_story"));
+                    found.setPowerLevel(rs.getInt("power_level"));
+                    found.setRarity(Rarity.valueOf(found.getRarity().name()));
+                    found.setLastKnownLocation(rs.getString("last_known_location"));
+                    found.setEstimatedValue(rs.getInt("estimated_value"));
 
-            if (rs.next()) {
-                Artifact found = new Artifact();
-                found.setId(rs.getInt("id"));
-                found.setName(rs.getString("name"));
-                found.setOriginStory(rs.getString("origin_story"));
-                found.setPowerLevel(rs.getInt("power_level"));
-                found.setRarity(Rarity.valueOf(found.getRarity().name()));
-                found.setLastKnownLocation(rs.getString("last_known_location"));
-                found.setEstimatedValue(rs.getInt("estimated_value"));
-
-                logger.info("SELECT: " + found);
-
-                return found;
+                    logger.info("SELECT: " + found);
+                    return found;
+                } else {
+                    throw new RuntimeException("Artifact with id not found");
+                }
             }
         } catch (SQLException e) {
             throw new RuntimeException("Failed to fetch artifact", e);
         }
-
-        return null;
     }
 
     @Override
@@ -103,30 +114,32 @@ public class ArtifactDAOImpl implements ArtifactDAO {
                     FROM artifacts a
                     WHERE a.name = ?
                 """;
-
-
-        try (PreparedStatement stmt = dataSource.getConnection().prepareStatement(sql)) {
+        try (
+                Connection conn = dataSource.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql)
+        ) {
             stmt.setString(1, name);
-            ResultSet rs = stmt.executeQuery();
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    Artifact found = new Artifact();
+                    found.setId(rs.getInt("id"));
+                    found.setName(rs.getString("name"));
+                    found.setOriginStory(rs.getString("origin_story"));
+                    found.setPowerLevel(rs.getInt("power_level"));
+                    found.setRarity(Rarity.valueOf(found.getRarity().name()));
+                    found.setLastKnownLocation(rs.getString("last_known_location"));
+                    found.setEstimatedValue(rs.getInt("estimated_value"));
 
-            if (rs.next()) {
-                Artifact found = new Artifact();
-                found.setId(rs.getInt("id"));
-                found.setName(rs.getString("name"));
-                found.setOriginStory(rs.getString("origin_story"));
-                found.setPowerLevel(rs.getInt("power_level"));
-                found.setRarity(Rarity.valueOf(found.getRarity().name()));
-                found.setLastKnownLocation(rs.getString("last_known_location"));
-                found.setEstimatedValue(rs.getInt("estimated_value"));
+                    logger.info("SELECT: " + found);
 
-                logger.info("SELECT: " + found);
-
-                return found;
+                    return found;
+                } else {
+                    throw new RuntimeException("Artifact by name failed");
+                }
             }
         } catch (SQLException e) {
             throw new RuntimeException("Failed to fetch artifact", e);
         }
-        return null;
     }
 
     @Override
@@ -142,7 +155,10 @@ public class ArtifactDAOImpl implements ArtifactDAO {
                 WHERE id = ?;
                 """;
 
-        try (PreparedStatement stmt = dataSource.getConnection().prepareStatement(sql)) {
+        try (
+                Connection conn = dataSource.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql)
+        ) {
             stmt.setString(1, artifact.getName());
             stmt.setString(2, artifact.getOriginStory());
             stmt.setInt(3, artifact.getPowerLevel());

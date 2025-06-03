@@ -1,18 +1,14 @@
 package database.postgres.DAOs;
 
 import DTOs.ArtifactHistory;
-import DTOs.Rarity;
 import com.zaxxer.hikari.HikariDataSource;
 
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.logging.Logger;
 
 public class ArtifactHistoryDAOImpl implements ArtifactHistoryDAO {
     private final HikariDataSource dataSource;
-    private static final Logger logger = Logger.getLogger(ArtifactDAOImpl.class.getName());
+    private static final Logger logger = Logger.getLogger(ArtifactHistoryDAOImpl.class.getName());
 
     public ArtifactHistoryDAOImpl(HikariDataSource dataSource) {
         this.dataSource = dataSource;
@@ -20,30 +16,37 @@ public class ArtifactHistoryDAOImpl implements ArtifactHistoryDAO {
 
     @Override
     public ArtifactHistory createArtifactHistory(ArtifactHistory artifactHistory, int artifactId) {
-
-        // Insert artifactHistory
-        String insertQuery = "INSERT INTO artifacthistory (artifact_id, event_date, event_descriptions, involved_parties) " +
+        String sql = "INSERT INTO artifacthistory (artifact_id, event_date, event_description, involved_parties) " +
                 "VALUES (?, ?, ?, ?) RETURNING id";
 
-        try (PreparedStatement stmt = dataSource.getConnection().prepareStatement(insertQuery)) {
+        try (
+                Connection conn = dataSource.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql)
+        ) {
             stmt.setInt(1, artifactId);
-            stmt.setDate(2, new Date(artifactHistory.getEventDate().getTime()));
+
+            // Use Timestamp to preserve time component
+            stmt.setTimestamp(2, new java.sql.Timestamp(artifactHistory.getEventDate().getTime()));
+
             stmt.setString(3, artifactHistory.getEventDescriptions());
             stmt.setString(4, artifactHistory.getInvolvedParties());
 
-            ResultSet resultSet = stmt.executeQuery();
-            logger.info("INSERT: " + artifactHistory);
+            try (ResultSet resultSet = stmt.executeQuery()) {
+                if (resultSet.next()) {
+                    int generatedId = resultSet.getInt("id");
+                    artifactHistory.setId(generatedId);
 
-            if (resultSet.next()) {
-                int generatedId = resultSet.getInt("id");  // The generated ID from the database
-                artifactHistory.setId(generatedId);  // or create new Artifact with ID set
-                return artifactHistory;
+                    logger.info("INSERT: " + artifactHistory);
+                    return artifactHistory;
+                } else {
+                    throw new RuntimeException("Artifact history insert did not return an ID.");
+                }
             }
         } catch (SQLException e) {
             throw new RuntimeException("Failed to insert artifact", e);
         }
-        return null;
     }
+
 
     @Override
     public ArtifactHistory getArtifactHistoryById(int id) {
@@ -52,37 +55,41 @@ public class ArtifactHistoryDAOImpl implements ArtifactHistoryDAO {
                         ah.id,
                         ah.artifact_id,
                         ah.event_date,
-                        ah.event_descriptions,
-                        ah.involved_parties,
+                        ah.event_description,
+                        ah.involved_parties
                     FROM artifactHistory ah
                     WHERE ah.id = ?
                 """;
 
-        try (PreparedStatement stmt = dataSource.getConnection().prepareStatement(sql)) {
+        try (
+                Connection conn = dataSource.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql)
+
+        ) {
             stmt.setInt(1, id);
-            ResultSet rs = stmt.executeQuery();
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    ArtifactHistory found = new ArtifactHistory();
+                    found.setId(rs.getInt("id"));
+                    found.setArtifactId(rs.getInt("artifact_id"));
+                    found.setEventDate(rs.getDate("event_date"));
+                    found.setEventDescriptions(rs.getString("event_description"));
+                    found.setInvolvedParties(rs.getString("involved_parties"));
 
-            if (rs.next()) {
-                ArtifactHistory found = new ArtifactHistory();
-                found.setId(rs.getInt("id"));
-                found.setArtifactId(rs.getInt("artifact_id"));
-                found.setEventDate(rs.getDate("event_date"));
-                found.setEventDescriptions(rs.getString("event_descriptions"));
-                found.setInvolvedParties(rs.getString("involved_parties"));
+                    logger.info("SELECT: " + found);
 
-                logger.info("SELECT: " + found);
-
-                return found;
+                    return found;
+                } else {
+                    throw new RuntimeException("Select did not find artifact history.");
+                }
             }
         } catch (SQLException e) {
             throw new RuntimeException("Failed to fetch artifact history", e);
         }
-
-        return null;
     }
 
     @Override
-    public void updateArtifactHistory(int id) {
+    public void updateArtifactHistory(ArtifactHistory artifactHistory) {
 
     }
 
@@ -90,9 +97,13 @@ public class ArtifactHistoryDAOImpl implements ArtifactHistoryDAO {
     public void deleteArtifactHistory(int id) {
         String sql = "DELETE FROM artifacthistory WHERE id = ?";
 
-        try (PreparedStatement stmt = dataSource.getConnection().prepareStatement(sql)) {
+        try (
+                Connection conn = dataSource.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql)
+        ) {
             stmt.setInt(1, id);
             stmt.executeUpdate();
+            logger.info("Deleted artifact history with id: " + id);
         } catch (SQLException e) {
             throw new RuntimeException("Failed to delete artifact history", e);
         }
