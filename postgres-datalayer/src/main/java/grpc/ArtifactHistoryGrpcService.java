@@ -6,7 +6,7 @@ import io.grpc.stub.StreamObserver;
 import mappers.ArtifactHistoryMapper;
 
 public class ArtifactHistoryGrpcService extends GatewayServiceGrpc.GatewayServiceImplBase {
-    private ArtifactHistoryService artifactHistoryService;
+    private final ArtifactHistoryService artifactHistoryService;
 
     public ArtifactHistoryGrpcService(ArtifactHistoryService artifactHistoryService) {
         this.artifactHistoryService = artifactHistoryService;

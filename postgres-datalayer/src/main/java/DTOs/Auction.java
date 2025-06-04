@@ -30,6 +30,9 @@ public class Auction {
         this.status = status;
     }
 
+    public Auction() {
+    }
+
     public int getId() {
         return id;
     }
