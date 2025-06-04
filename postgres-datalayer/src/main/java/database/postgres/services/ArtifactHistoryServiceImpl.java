@@ -1,6 +1,7 @@
 package database.postgres.services;
 
 import DTOs.ArtifactHistory;
+import database.postgres.DAOs.ArtifactDAO;
 import database.postgres.DAOs.ArtifactHistoryDAO;
 
 public class ArtifactHistoryServiceImpl implements ArtifactHistoryService {
@@ -23,8 +24,8 @@ public class ArtifactHistoryServiceImpl implements ArtifactHistoryService {
     }
 
     @Override
-    public void updateArtifactHistory(int id) {
-        artifactHistoryDAO.updateArtifactHistory(id);
+    public void updateArtifactHistory(ArtifactHistory artifactHistory) {
+        artifactHistoryDAO.updateArtifactHistory(artifactHistory);
     }
 
     @Override

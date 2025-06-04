@@ -6,21 +6,21 @@ public class ArtifactHistory {
     private int id;
     private int artifact_id;
     private Date event_date;
-    private String event_descriptions;
+    private String event_description;
     private String involved_parties;
 
-    public ArtifactHistory(int id, int artifact_id, Date event_date, String event_descriptions, String involved_parties) {
+    public ArtifactHistory(int id, int artifact_id, Date event_date, String event_description, String involved_parties) {
         this.id = id;
         this.artifact_id = artifact_id;
         this.event_date = event_date;
-        this.event_descriptions = event_descriptions;
+        this.event_description = event_description;
         this.involved_parties = involved_parties;
     }
 
-    public ArtifactHistory(int artifact_id, Date event_date, String event_descriptions, String involved_parties) {
+    public ArtifactHistory(int artifact_id, Date event_date, String event_description, String involved_parties) {
         this.artifact_id = artifact_id;
         this.event_date = event_date;
-        this.event_descriptions = event_descriptions;
+        this.event_description = event_description;
         this.involved_parties = involved_parties;
     }
 
@@ -52,11 +52,11 @@ public class ArtifactHistory {
     }
 
     public String getEventDescriptions() {
-        return event_descriptions;
+        return event_description;
     }
 
     public void setEventDescriptions(String event_descriptions) {
-        this.event_descriptions = event_descriptions;
+        this.event_description = event_descriptions;
     }
 
     public String getInvolvedParties() {
@@ -73,7 +73,7 @@ public class ArtifactHistory {
                 "id=" + id +
                 ", artifact_id=" + artifact_id +
                 ", event_date=" + event_date +
-                ", event_descriptions='" + event_descriptions + '\'' +
+                ", event_descriptions='" + event_description + '\'' +
                 ", involved_parties='" + involved_parties + '\'' +
                 '}';
     }

@@ -1,6 +1,5 @@
 package database.postgres.DAOs;
 
-import grpc.ArtifactProto;
 import DTOs.Artifact;
 
 import java.util.List;

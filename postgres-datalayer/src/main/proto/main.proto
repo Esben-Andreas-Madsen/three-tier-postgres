@@ -18,6 +18,6 @@ service GatewayService {
   rpc CreateArtifactHistory (CreateArtifactHistoryRequest) returns (ArtifactHistoryResponse);
   rpc GetArtifactHistoryById (GetArtifactHistoryByIdRequest) returns (ArtifactHistoryResponse);
   rpc UpdateArtifactHistory (UpdateArtifactHistoryRequest) returns (UpdateArtifactResponse);
-  rpc DeleteArtifactHistory (DeleteArtifactHistoryResponse) returns (DeleteArtifactHistoryResponse);
+  rpc DeleteArtifactHistory (DeleteArtifactHistoryRequest) returns (DeleteArtifactHistoryResponse);
   rpc GetAllArtifactHistories (GetAllArtifactHistoriesRequest) returns (stream ArtifactHistoryResponse);
 }

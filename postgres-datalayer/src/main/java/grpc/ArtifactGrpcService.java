@@ -1,5 +1,6 @@
 package grpc;
 
+import database.postgres.services.ArtifactService;
 import database.postgres.services.ArtifactServiceImpl;
 import io.grpc.stub.StreamObserver;
 import mappers.ArtifactMapper;
@@ -9,10 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ArtifactGrpcService extends GatewayServiceGrpc.GatewayServiceImplBase {
-    private final ArtifactServiceImpl artifactServiceImpl;
+    private final ArtifactService artifactService;
 
-    public ArtifactGrpcService(ArtifactServiceImpl artifactServiceImpl) {
-        this.artifactServiceImpl = artifactServiceImpl; // Service layer dependency injected
+    public ArtifactGrpcService(ArtifactServiceImpl artifactService) {
+        this.artifactService = artifactService; // Service layer dependency injected
     }
 
     @Override
@@ -22,7 +23,7 @@ public class ArtifactGrpcService extends GatewayServiceGrpc.GatewayServiceImplBa
             Artifact artifact = ArtifactMapper.INSTANCE.toArtifact(request.getArtifactproto());
 
             // Call domain service which returns saved artifact with generated ID
-            Artifact savedArtifact = artifactServiceImpl.createArtifact(artifact);
+            Artifact savedArtifact = artifactService.createArtifact(artifact);
 
             // Map domain model back to proto (with generated ID)
             ArtifactProto artifactProto = ArtifactMapper.INSTANCE.toProto(savedArtifact);
@@ -44,7 +45,7 @@ public class ArtifactGrpcService extends GatewayServiceGrpc.GatewayServiceImplBa
         try {
             int id = request.getId();
 
-            Artifact foundArtifact = artifactServiceImpl.getArtifactById(id);
+            Artifact foundArtifact = artifactService.getArtifactById(id);
 
             // Map domain model back to proto (with generated ID)
             ArtifactProto artifactProto = ArtifactMapper.INSTANCE.toProto(foundArtifact);
@@ -64,7 +65,7 @@ public class ArtifactGrpcService extends GatewayServiceGrpc.GatewayServiceImplBa
     @Override
     public void getArtifactByName(GetArtifactByNameRequest request, StreamObserver<ArtifactResponse> responseObserver) {
         try {
-            Artifact foundArtifact = artifactServiceImpl.getArtifactByName(request.getName());
+            Artifact foundArtifact = artifactService.getArtifactByName(request.getName());
 
             // Map domain model back to proto (with generated ID)
             ArtifactProto artifactProto = ArtifactMapper.INSTANCE.toProto(foundArtifact);
@@ -87,7 +88,7 @@ public class ArtifactGrpcService extends GatewayServiceGrpc.GatewayServiceImplBa
             // TODO update to return bool through DAO
             Artifact artifact = ArtifactMapper.INSTANCE.toArtifact(request.getArtifactproto());
 
-            artifactServiceImpl.updateArtifact(artifact);
+            artifactService.updateArtifact(artifact);
 
 
             responseObserver.onNext(UpdateArtifactResponse.newBuilder().build());
@@ -102,7 +103,7 @@ public class ArtifactGrpcService extends GatewayServiceGrpc.GatewayServiceImplBa
     public void deleteArtifact(DeleteArtifactRequest request, StreamObserver<DeleteArtifactResponse> responseObserver) {
         try {
             // TODO update to return bool through DAO
-            artifactServiceImpl.deleteArtifact(request.getId());
+            artifactService.deleteArtifact(request.getId());
 
             responseObserver.onNext(DeleteArtifactResponse.newBuilder().build());
             responseObserver.onCompleted();
@@ -115,7 +116,7 @@ public class ArtifactGrpcService extends GatewayServiceGrpc.GatewayServiceImplBa
     @Override
     public void getAllArtifacts(GetAllArtifactRequests requests, StreamObserver<ArtifactResponse> responseObserver) {
         try {
-            List<Artifact> artifacts = artifactServiceImpl.getAllArtifacts();
+            List<Artifact> artifacts = artifactService.getAllArtifacts();
             List<ArtifactResponse> responses = new ArrayList<>();
 
             for (Artifact a : artifacts) {
