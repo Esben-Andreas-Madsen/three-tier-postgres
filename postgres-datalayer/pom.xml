@@ -11,7 +11,7 @@
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
-        <protobuf.version>4.31.1</protobuf.version>
+        <protobuf.version>4.32.0</protobuf.version>
         <grpc.version>1.74.0</grpc.version>
     </properties>
 
